@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+:root {
+  --background: hsl(214 100% 98%);
+  --foreground: hsl(216 54% 10%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(216 54% 10%);
+  --card-border: hsl(220 13% 91%);
+  --primary: hsl(217 91% 60%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(214 32% 91%);
+  --secondary-foreground: hsl(216 54% 10%);
+  /* muted = LIGHT surface (pill/avatar backgrounds), like the real site */
+  --muted: hsl(214 40% 95%);
+  --muted-foreground: hsl(220 9% 46%);
+  --accent: hsl(253 89% 66%);
+  --accent-foreground: hsl(0 0% 100%);
+  --border: hsl(220 13% 91%);
+  --input: hsl(220 13% 91%);
+  --ring: hsl(217 91% 60%);
+  --radius: 1rem;
+  /* legacy aliases — keep so any missed peach refs still resolve to blue */
+  --peach: var(--primary);
+  --peach-light: hsl(214 100% 96%);
+  --peach-border: hsl(217 91% 85%);
+  --rank-bg: var(--primary);
+}
+
+.dark {
+  --background: hsl(216 54% 10%);
+  --foreground: hsl(214 100% 98%);
+  --card: hsl(216 54% 12%);
+  --card-foreground: hsl(214 100% 98%);
+  --card-border: hsl(216 32% 18%);
+  --primary: hsl(217 91% 60%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(216 32% 18%);
+  --secondary-foreground: hsl(214 100% 98%);
+  --muted: hsl(216 32% 18%);
+  --muted-foreground: hsl(220 9% 60%);
+  --accent: hsl(253 89% 66%);
+  --accent-foreground: hsl(0 0% 100%);
+  --border: hsl(216 32% 18%);
+  --input: hsl(216 32% 18%);
+  --ring: hsl(217 91% 60%);
+  --peach: hsl(217 91% 65%);
+  --peach-light: hsl(216 32% 18%);
+  --peach-border: hsl(216 32% 25%);
+  --rank-bg: var(--primary);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-border: var(--card-border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-peach: var(--peach);
+  --color-peach-light: var(--peach-light);
+  --color-peach-border: var(--peach-border);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Utilities ported from ocvideo2.com */
+.ease-soft {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shine::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-25deg);
+  animation: shine 3s infinite;
+  z-index: 1;
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  20% {
+    left: 200%;
+  }
+  100% {
+    left: 200%;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% - 1rem));
+  }
+}
+
+/* Scrollbar styling — blue-tinted */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(214 32% 80%);
+  border-radius: 3px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(216 32% 25%);
+}
+
+@keyframes live-pulse {
+  0% { opacity: 1; }
+  15% { opacity: 0.85; }
+  30% { opacity: 1; }
+}
+.animate-live-pulse {
+  animation: live-pulse 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-live-pulse { animation: none; }
+}
