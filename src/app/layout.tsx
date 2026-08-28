@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "outbid.lol — Claim #1 for your product",
+  title: "openoutbid.com — Claim #1 for your product",
   description: "No ads, no API keys, no revenue sharing. Just outbid your competition to get to the top. Will you take #1 when this site goes viral?",
 };
 

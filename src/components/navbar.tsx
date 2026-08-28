@@ -39,7 +39,7 @@ export default function Navbar() {
           <Link href="/" className="flex shrink-0 items-center gap-1.5 text-[18px] font-semibold tracking-[-0.03em]">
             <LogoMark />
             <span>
-              outbid<span className="text-primary">.</span>lol
+              openoutbid<span className="text-primary">.</span>com
             </span>
           </Link>
 

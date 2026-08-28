@@ -10,12 +10,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("outbid-theme") === "dark") setDark(true);
+    const saved = localStorage.getItem("openoutbid-theme") ?? localStorage.getItem("outbid-theme");
+    if (saved === "dark") setDark(true);
   }, []);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
-    localStorage.setItem("outbid-theme", dark ? "dark" : "light");
+    localStorage.setItem("openoutbid-theme", dark ? "dark" : "light");
   }, [dark]);
 
   return <Ctx.Provider value={{ dark, toggle: () => setDark((d) => !d) }}>{children}</Ctx.Provider>;

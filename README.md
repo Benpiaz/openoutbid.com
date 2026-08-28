@@ -1,8 +1,8 @@
-# Outbid
+# openoutbid.com
 
 **Claim #1 for your product.** A real-time bidding leaderboard where your bid decides your rank. No ads, no API keys, no revenue sharing — just outbid the competition to the top.
 
-Clone of [outbid.lol](https://outbid.lol) — Next.js 16 + Supabase. Live site: `openoutbid.com`.
+Founded by [benpiaz](https://github.com/benpiaz) — Next.js 16 + Supabase. Live site: [openoutbid.com](https://openoutbid.com)
 
 ## Tech
 
@@ -59,3 +59,7 @@ src/
 
 - [ ] Stripe Checkout + webhook
 - [ ] Auth / admin dashboard
+
+## Credits
+
+Built by [benpiaz](https://github.com/benpiaz). Concept inspired by [outbid.lol](https://outbid.lol).

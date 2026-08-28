@@ -10,7 +10,7 @@ const TESTIMONIALS = [
   {
     handle: "@Lewis",
     name: "Lewis",
-    text: "outbid.lol is printing money. $238k since launch with zero ad spend. Wild.",
+    text: "openoutbid.com is printing money. $238k since launch with zero ad spend. Wild.",
     likes: "1.8k",
   },
   {

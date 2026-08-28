@@ -76,7 +76,7 @@ export default function StatsPage() {
       <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-[56px] max-w-4xl items-center justify-between px-4">
           <Link href="/" className="text-[18px] font-bold">
-            ← outbid.lol
+            ← openoutbid.com
           </Link>
           <span className="text-sm font-semibold">Live stats</span>
         </div>

@@ -13,11 +13,11 @@ export default async function AboutPage() {
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="mx-auto w-full max-w-3xl px-4 pt-10 pb-16">
-        <h1 className="text-2xl font-bold tracking-tight">About outbid.lol</h1>
+        <h1 className="text-2xl font-bold tracking-tight">About openoutbid.com</h1>
 
         <div className="mt-6 rounded-2xl border border-border bg-card p-6 sm:p-8">
           <p className="text-sm leading-relaxed text-muted-foreground">
-            outbid.lol started as a simple side project: a leaderboard where the highest bidder claims{" "}
+            openoutbid.com started as a simple side project: a leaderboard where the highest bidder claims{" "}
             <span className="font-semibold text-foreground">#1</span>. No voting, no algorithms — just money talks.
           </p>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -51,10 +51,10 @@ export default async function AboutPage() {
         {/* Founder card */}
         <div className="mt-12 rounded-2xl border border-border bg-card p-6 text-center">
           <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary/10 text-xl font-bold text-primary">
-            JW
+            B
           </span>
-          <p className="mt-3 text-sm font-semibold">Jonathan Wilke</p>
-          <p className="text-xs text-muted-foreground">Founder of outbid.lol</p>
+          <p className="mt-3 text-sm font-semibold">benpiaz</p>
+          <p className="text-xs text-muted-foreground">Founder of openoutbid.com</p>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
             &ldquo;I wanted the most honest ranking on the internet. If you want #1, outbid the person holding it. That&apos;s it.&rdquo;
           </p>
@@ -72,10 +72,11 @@ export default async function AboutPage() {
         </div>
 
         <p className="mt-8 text-center text-xs text-muted-foreground/60">
-          Built by <span className="font-medium text-muted-foreground">@jonathan_wilke</span> · Brought to you by{" "}
-          <a href="https://supastarter.dev" target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
-            supastarter.dev
-          </a>
+          Built by{" "}
+          <a href="https://github.com/benpiaz" target="_blank" rel="noopener noreferrer" className="font-medium text-muted-foreground hover:text-primary">
+            @benpiaz
+          </a>{" "}
+          · openoutbid.com
         </p>
 
         <div className="mt-10">
