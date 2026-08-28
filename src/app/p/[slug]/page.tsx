@@ -41,9 +41,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
         {/* Hero */}
         <div className="mt-6 flex gap-4">
-          <span className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-muted text-xl font-bold text-muted-foreground">
-            {letter}
-          </span>
+          {product.logo && /^https?:\/\//.test(product.logo) ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={product.logo} alt={product.name} className="size-16 shrink-0 rounded-2xl border border-border bg-white object-cover" />
+          ) : (
+            <span className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-muted text-xl font-bold text-muted-foreground">
+              {letter}
+            </span>
+          )}
           <div className="min-w-0">
             <h1 className="flex flex-wrap items-center gap-2 text-xl font-bold leading-tight">
               {product.name}

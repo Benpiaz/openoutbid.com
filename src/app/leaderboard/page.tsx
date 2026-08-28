@@ -14,7 +14,7 @@ export default async function LeaderboardPage() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="mx-auto w-full max-w-4xl px-4 pt-10 pb-16">
+      <main className="mx-auto w-full max-w-6xl px-4 pt-10 pb-16 lg:px-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Leaderboard</h1>

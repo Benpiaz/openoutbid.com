@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="mx-auto w-full max-w-4xl text-center">
+    <footer className="mx-auto w-full max-w-6xl text-center">
       <p className="text-xs leading-relaxed text-muted-foreground">
         <a href="https://openoutbid.com" target="_blank" rel="noopener noreferrer" className="text-primary transition-colors hover:text-primary/80">
           openoutbid.com

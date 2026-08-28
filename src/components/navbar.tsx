@@ -34,7 +34,7 @@ export default function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-[56px] max-w-4xl items-center gap-2 px-4">
+        <div className="mx-auto flex h-[56px] max-w-6xl items-center gap-2 px-4">
           {/* Logo */}
           <Link href="/" className="flex shrink-0 items-center gap-1.5 text-[18px] font-semibold tracking-[-0.03em]">
             <LogoMark />

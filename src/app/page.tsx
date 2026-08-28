@@ -12,6 +12,8 @@ import Footer from "@/components/footer";
 import CategoryPills from "@/components/category-pills";
 import LeaderboardRow, { timeAgo } from "@/components/leaderboard-row";
 import { useViewMode } from "@/components/view-mode";
+import { useLiveStats } from "@/lib/use-live-stats";
+import CheckoutModal from "@/components/checkout-modal";
 
 const PAGE_SIZE = 25;
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -26,16 +28,33 @@ function HomeInner() {
   const [claimUrl, setClaimUrl] = useState("");
   const [claimCategory, setClaimCategory] = useState<Category | "">("");
   const [claimPrice, setClaimPrice] = useState(17005);
-  const [claiming, setClaiming] = useState(false);
   const [showToast, setShowToast] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState(initialCat);
-  const [visitors24h, setVisitors24h] = useState(8341);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const liveStats = useLiveStats();
   const urlInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setSelectedCategory(initialCat);
   }, [initialCat]);
+
+  // Polar return: ?paid=OBB00001
+  useEffect(() => {
+    const paid = searchParams.get("paid");
+    if (!paid) return;
+    fetch(`/api/slot-order/${encodeURIComponent(paid)}`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((j) => {
+        if (j.status === "paid") {
+          setShowToast("Payment confirmed \u2014 your slot is live!");
+          supabase.from("products").select("*").order("current_bid", { ascending: false }).then(({ data }) => {
+            if (data) setProducts((data ?? []).map(mapRowToProduct));
+          });
+        }
+      })
+      .catch(() => {});
+  }, [searchParams]);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -59,12 +78,6 @@ function HomeInner() {
       setClaimPrice(max + 5);
     }
   }, [products]);
-
-  // Visitors ticker
-  useEffect(() => {
-    const id = setInterval(() => setVisitors24h((v) => v + Math.floor(Math.random() * 3)), 4000);
-    return () => clearInterval(id);
-  }, []);
 
   useEffect(() => {
     if (!showToast) return;
@@ -114,25 +127,18 @@ function HomeInner() {
       setShowToast("Minimum bid is $2");
       return;
     }
-    setClaiming(true);
+    setCheckoutOpen(true);
+  };
+
+  const handlePaid = async () => {
+    setCheckoutOpen(false);
+    setClaimUrl("");
+    setPage(1);
+    setShowToast("Payment confirmed \u2014 your slot is live!");
     try {
-      const res = await fetch("/api/claim", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: claimUrl, category: claimCategory, bid: Math.floor(claimPrice) }),
-      });
-      const body = await res.json();
-      if (!res.ok) throw new Error(body.error || "Claim failed");
-      const product = mapRowToProduct(body.product);
-      setProducts((prev) => [product, ...prev]);
-      setClaimUrl("");
-      setPage(1);
-      setShowToast(`Claimed a rank for $${Math.floor(claimPrice).toLocaleString()}!`);
-    } catch (err: unknown) {
-      setShowToast(err instanceof Error ? err.message : "Claim failed — please try again");
-    } finally {
-      setClaiming(false);
-    }
+      const { data } = await supabase.from("products").select("*").order("current_bid", { ascending: false });
+      if (data) setProducts((data ?? []).map(mapRowToProduct));
+    } catch {}
   };
 
   const handleTakeover = () => {
@@ -145,33 +151,44 @@ function HomeInner() {
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
 
-      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 pt-10 pb-16">
+      <main className="mx-auto flex w-full max-w-[1280px] flex-1 flex-col px-4 pt-10 pb-16 lg:px-8">
         {/* Live pill */}
         <div className="flex justify-center">
           <Link
             href="/stats"
-            className="inline-flex items-center gap-2 rounded-full bg-muted py-1 pr-3 pl-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-sm text-muted-foreground shadow-sm transition-colors hover:text-foreground"
           >
-            <span className="inline-flex h-5 animate-live-pulse items-center rounded-full bg-primary px-[7px] text-[10px] font-semibold tracking-wide text-primary-foreground motion-reduce:animate-none">
-              Live
-            </span>
-            <span>
-              {visitors24h.toLocaleString()} visitors in the last 24 hours
-              <span className="text-primary"> · See live stats</span>
+            <span className="size-2 animate-live-pulse rounded-full bg-green-500 motion-reduce:animate-none" />
+            <span className="tabular-nums">
+              {liveStats.live ? (
+                <>
+                  <span className="font-semibold text-foreground">{liveStats.online.toLocaleString()}</span> online
+                  <span className="mx-1.5 text-border">·</span>
+                  <span className="font-semibold text-foreground">{liveStats.visitors.toLocaleString()}</span> visitors
+                  <span className="text-primary"> \u00b7 see stats\u2192</span>
+                </>
+              ) : (
+                <>
+                  <span className="font-semibold text-foreground">\u2014</span> online
+                  <span className="mx-1.5 text-border">·</span>
+                  <span className="font-semibold text-foreground">\u2014</span> visitors
+                  <span className="text-muted-foreground"> \u00b7 tracking live</span>
+                </>
+              )}
             </span>
           </Link>
         </div>
 
         {/* Hero */}
         <div className="mt-6 text-center">
-          <div className="flex flex-wrap items-center justify-center gap-2 text-[28px] font-bold tracking-[-0.03em] leading-none md:text-[40px]">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-[38px] font-bold tracking-[-0.03em] leading-none md:text-[56px]">
             <span>Claim #1 for</span>
             <span className="inline-flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => setClaimPrice((p) => Math.max(2, p - 1))}
                 aria-label="Decrease price by $1"
-                className="flex size-6 items-center justify-center rounded-full bg-primary/15 text-[16px] leading-none text-primary transition-colors hover:bg-primary/25"
+                className="flex size-8 items-center justify-center rounded-full bg-primary/15 text-[18px] leading-none text-primary transition-colors hover:bg-primary/25"
               >
                 −
               </button>
@@ -195,19 +212,19 @@ function HomeInner() {
                 type="button"
                 onClick={() => setClaimPrice((p) => p + 1)}
                 aria-label="Increase price by $1"
-                className="flex size-6 items-center justify-center rounded-full bg-primary/15 text-[16px] leading-none text-primary transition-colors hover:bg-primary/25"
+                className="flex size-8 items-center justify-center rounded-full bg-primary/15 text-[18px] leading-none text-primary transition-colors hover:bg-primary/25"
               >
                 +
               </button>
             </span>
           </div>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-3 max-w-2xl text-[17px] leading-relaxed text-muted-foreground">
             Your amount decides the rank. Paying less than the #1 price still puts you on the board at whatever place that bid can take.
           </p>
         </div>
 
         {/* Claim form */}
-        <form onSubmit={handleClaim} className="mx-auto mt-6 flex w-full max-w-xl flex-col gap-2 sm:flex-row">
+        <form onSubmit={handleClaim} className="mx-auto mt-7 flex w-full max-w-3xl flex-col gap-2.5 sm:flex-row">
           <div className="relative flex-1">
             <Globe size={16} className="pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted-foreground" />
             <input
@@ -215,14 +232,14 @@ function HomeInner() {
               value={claimUrl}
               onChange={(e) => setClaimUrl(e.target.value)}
               placeholder="Your product URL or @handle"
-              className="h-11 w-full rounded-xl border border-input bg-card pr-4 pl-10 text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-ring/20 focus:outline-none"
+              className="h-12 w-full rounded-xl border border-input bg-card pr-4 pl-10 text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-ring/20 focus:outline-none"
             />
           </div>
           <div className="relative sm:w-[168px] sm:shrink-0">
             <select
               value={claimCategory}
               onChange={(e) => setClaimCategory(e.target.value as Category | "")}
-              className="h-11 w-full appearance-none rounded-xl border border-input bg-card px-3 pr-8 text-sm text-muted-foreground focus:ring-2 focus:ring-ring/20 focus:outline-none"
+              className="h-12 w-full appearance-none rounded-xl border border-input bg-card px-3 pr-8 text-sm text-muted-foreground focus:ring-2 focus:ring-ring/20 focus:outline-none"
             >
               <option value="" disabled>
                 Category
@@ -241,15 +258,15 @@ function HomeInner() {
           </div>
           <button
             type="submit"
-            disabled={!claimUrl.trim() || claiming}
-            className="btn-shine h-11 shrink-0 rounded-full bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={!claimUrl.trim() || !claimCategory}
+            className="btn-shine h-[48px] shrink-0 rounded-full bg-primary px-8 text-[15px] font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {claiming ? "Claiming…" : "Outbid"}
+            Outbid — ${claimPrice.toLocaleString()}
           </button>
         </form>
 
         {/* Takeover banner */}
-        <div className="mx-auto mt-4 flex w-full max-w-xl items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/[0.08] px-4 py-3">
+        <div className="mx-auto mt-4 flex w-full max-w-3xl items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/[0.08] px-5 py-3.5">
           <p className="text-sm leading-snug text-muted-foreground">
             <span className="font-semibold text-foreground">New:</span> Leaderboard takeover. Own the first page —{" "}
             <span className="font-semibold text-foreground">${takeoverPrice.toLocaleString()}</span>{" "}
@@ -270,7 +287,7 @@ function HomeInner() {
         </div>
 
         {/* Leaderboard */}
-        <div className="mt-6 rounded-2xl bg-card px-4 py-3 shadow-[0_12px_50px_rgba(30,41,59,0.08)] sm:px-7">
+        <div className="mt-8 rounded-2xl bg-card px-5 py-4 shadow-[0_12px_50px_rgba(30,41,59,0.08)] sm:px-8">
           <div className="flex items-center justify-between border-b border-border py-3">
             <h2 className="text-sm font-semibold">
               {mode === "today" ? "Today's leaderboard" : "All-time leaderboard"}
@@ -367,6 +384,15 @@ function HomeInner() {
           <Footer />
         </div>
       </main>
+
+      <CheckoutModal
+        open={checkoutOpen}
+        onClose={() => setCheckoutOpen(false)}
+        url={claimUrl}
+        category={claimCategory as string}
+        bid={Math.floor(claimPrice)}
+        onPaid={handlePaid}
+      />
 
       {/* Toast */}
       {showToast && (

@@ -25,7 +25,7 @@ export default async function CategoriesPage() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main className="mx-auto w-full max-w-4xl px-4 pt-10 pb-16">
+      <main className="mx-auto w-full max-w-6xl px-4 pt-10 pb-16 lg:px-6">
         <h1 className="text-2xl font-bold tracking-tight">Categories</h1>
         <p className="mt-1 text-sm text-muted-foreground">Browse products by category. Claim #1 in your niche.</p>
 

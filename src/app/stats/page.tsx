@@ -5,12 +5,12 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { mapRowToProduct } from "@/lib/db";
 import type { Product } from "@/lib/data";
+import { useLiveStats } from "@/lib/use-live-stats";
 
 export default function StatsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [online, setOnline] = useState(47);
-  const [visitors24h, setVisitors24h] = useState(8341);
+  const liveStats = useLiveStats();
 
   useEffect(() => {
     supabase
@@ -23,14 +23,6 @@ export default function StatsPage() {
       });
   }, []);
 
-  useEffect(() => {
-    const id = setInterval(() => {
-      setOnline(v => Math.max(12, v + Math.floor(Math.random() * 7) - 3));
-      setVisitors24h(v => v + Math.floor(Math.random() * 3));
-    }, 3000);
-    return () => clearInterval(id);
-  }, []);
-
   const totalClaims = products.length;
   const totalBids = products.reduce((s, p) => s + p.currentBid, 0);
   const top = products[0];
@@ -39,15 +31,15 @@ export default function StatsPage() {
   const stats = [
     {
       label: "Online right now",
-      value: String(online),
+      value: String(liveStats.online),
       live: true,
-      sub: "people on this page",
+      sub: liveStats.live ? "real-time via datafa.st" : "people on this page",
     },
     {
       label: "Visitors — last 24 hours",
-      value: visitors24h.toLocaleString(),
+      value: liveStats.visitors.toLocaleString(),
       live: true,
-      sub: "counting every visit",
+      sub: liveStats.live ? "real-time via datafa.st" : "counting every visit",
     },
     {
       label: "Total claims",
@@ -74,7 +66,7 @@ export default function StatsPage() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-[56px] max-w-4xl items-center justify-between px-4">
+        <div className="mx-auto flex h-[56px] max-w-6xl items-center justify-between px-4">
           <Link href="/" className="text-[18px] font-bold">
             ← openoutbid.com
           </Link>
@@ -82,7 +74,7 @@ export default function StatsPage() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-4xl px-4 py-10">
+      <main className="mx-auto max-w-6xl px-4 py-10">
         <h1 className="text-center text-2xl font-bold tracking-[-0.02em]">Live stats</h1>
         <p className="mx-auto mt-2 max-w-md text-center text-sm text-muted-foreground">
           Real-time numbers straight from the leaderboard. Refreshes as bids come in.

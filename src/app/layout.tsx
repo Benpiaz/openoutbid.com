@@ -21,6 +21,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
+      <head>
+        {/* datafa.st cookieless analytics */}
+        <script defer data-website-id="dfid_5QcnQoQjLtkj8TE11fE5O" data-domain="openoutbid.com" src="https://datafa.st/js/script.cookieless.js" />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <Providers>{children}</Providers>
       </body>

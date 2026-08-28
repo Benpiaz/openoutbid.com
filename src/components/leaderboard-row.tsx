@@ -48,13 +48,18 @@ export default function LeaderboardRow({
         href={`/p/${product.slug}`}
         className={`my-3 flex items-center gap-3 rounded-xl px-2.5 py-3 transition-colors hover:brightness-[0.99] ${borderCls}`}
       >
-        <span className="shrink-0 rounded-full bg-primary px-2 py-0.5 text-xs font-semibold text-primary-foreground">{rankLabel}</span>
-        <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
-          {letter}
-        </span>
+        <span className="shrink-0 rounded-full bg-primary px-2.5 py-0.5 text-sm font-semibold text-primary-foreground">{rankLabel}</span>
+        {product.logo && /^https?:\/\//.test(product.logo) ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={product.logo} alt={product.name} className="size-12 shrink-0 rounded-full border border-border bg-white object-cover" />
+        ) : (
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-muted text-base font-semibold text-muted-foreground">
+            {letter}
+          </span>
+        )}
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm font-semibold leading-tight">{product.name}</span>
-          <span className="mt-0.5 line-clamp-2 block text-xs leading-snug text-muted-foreground">{product.tagline}</span>
+          <span className="block truncate text-base font-semibold leading-tight">{product.name}</span>
+          <span className="mt-0.5 line-clamp-2 block text-sm leading-snug text-muted-foreground">{product.tagline}</span>
           <span className="mt-1 flex flex-wrap items-center gap-1 text-[11px] leading-none text-muted-foreground/60">
             {categoryRank !== undefined && (
               <span className="inline-flex items-center gap-1">
@@ -69,7 +74,7 @@ export default function LeaderboardRow({
           </span>
         </span>
         <span className="shrink-0 text-right">
-          <span className="block text-sm font-semibold tabular-nums">${product.currentBid.toLocaleString()}</span>
+          <span className="block text-base font-semibold tabular-nums">${product.currentBid.toLocaleString()}</span>
           <span className="mt-0.5 flex items-center justify-end gap-1 text-[11px] text-muted-foreground/50">
             <Clock3 size={10} />
             {timeAgo(product.createdAt)}
@@ -84,13 +89,18 @@ export default function LeaderboardRow({
       href={`/p/${product.slug}`}
       className="flex items-center gap-3 border-t border-border py-3.5 transition-colors hover:text-primary"
     >
-      <span className="inline-flex min-w-9 shrink-0 items-center justify-center text-sm font-medium text-muted-foreground">{rankLabel}</span>
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
-        {letter}
-      </span>
+      <span className="inline-flex min-w-10 shrink-0 items-center justify-center text-base font-medium text-muted-foreground">{rankLabel}</span>
+      {product.logo && /^https?:\/\//.test(product.logo) ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={product.logo} alt={product.name} className="size-11 shrink-0 rounded-full border border-border bg-white object-cover" />
+      ) : (
+        <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-semibold text-muted-foreground">
+          {letter}
+        </span>
+      )}
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-medium leading-tight">{product.name}</span>
-        <span className="block truncate text-xs text-muted-foreground">{product.tagline}</span>
+        <span className="block truncate text-base font-medium leading-tight">{product.name}</span>
+        <span className="block truncate text-sm text-muted-foreground">{product.tagline}</span>
         <span className="mt-1 flex flex-wrap items-center gap-1 text-[11px] text-muted-foreground/60">
           {categoryRank !== undefined && (
             <span className="inline-flex items-center gap-1">
@@ -104,7 +114,7 @@ export default function LeaderboardRow({
         </span>
       </span>
       <span className="shrink-0 text-right">
-        <span className="block text-sm font-medium tabular-nums">${product.currentBid.toLocaleString()}</span>
+        <span className="block text-base font-medium tabular-nums">${product.currentBid.toLocaleString()}</span>
         <span className="mt-0.5 block text-[11px] text-muted-foreground/50">{timeAgo(product.createdAt)}</span>
       </span>
     </Link>
