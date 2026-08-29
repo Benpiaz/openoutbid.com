@@ -47,7 +47,7 @@ function HomeInner() {
       .then((r) => r.json())
       .then((j) => {
         if (j.status === "paid") {
-          setShowToast("Payment confirmed \u2014 your slot is live!");
+          setShowToast("Payment confirmed — your slot is live!");
           supabase.from("products").select("*").order("current_bid", { ascending: false }).then(({ data }) => {
             if (data) setProducts((data ?? []).map(mapRowToProduct));
           });
@@ -134,7 +134,7 @@ function HomeInner() {
     setCheckoutOpen(false);
     setClaimUrl("");
     setPage(1);
-    setShowToast("Payment confirmed \u2014 your slot is live!");
+    setShowToast("Payment confirmed — your slot is live!");
     try {
       const { data } = await supabase.from("products").select("*").order("current_bid", { ascending: false });
       if (data) setProducts((data ?? []).map(mapRowToProduct));
@@ -165,14 +165,14 @@ function HomeInner() {
                   <span className="font-semibold text-foreground">{liveStats.online.toLocaleString()}</span> online
                   <span className="mx-1.5 text-border">·</span>
                   <span className="font-semibold text-foreground">{liveStats.visitors.toLocaleString()}</span> visitors
-                  <span className="text-primary"> \u00b7 see stats\u2192</span>
+                  <span className="text-primary"> · see stats →</span>
                 </>
               ) : (
                 <>
-                  <span className="font-semibold text-foreground">\u2014</span> online
+                  <span className="font-semibold text-foreground">—</span> online
                   <span className="mx-1.5 text-border">·</span>
-                  <span className="font-semibold text-foreground">\u2014</span> visitors
-                  <span className="text-muted-foreground"> \u00b7 tracking live</span>
+                  <span className="font-semibold text-foreground">—</span> visitors
+                  <span className="text-muted-foreground"> · tracking live</span>
                 </>
               )}
             </span>
